@@ -1,5 +1,21 @@
 [
   {
+    "ContainingType": "StudentManagementSystem.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "StudentManagementSystem.DTOs.LoginRequestDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
     "ContainingType": "StudentManagementSystem.Controllers.StudentController",
     "Method": "GetAllStudents",
     "RelativePath": "api/Student",
