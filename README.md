@@ -1,53 +1,78 @@
-# Student Management System API
+# 🎓 Student Management System API
 
-A RESTful ASP.NET Core Web API for managing student records using SQL Server and Entity Framework Core. The application follows a clean layered architecture with Repository and Service patterns.
-
----
-
-## Features
-
-- Create a Student
-- Get All Students
-- Get Student by ID
-- Update Student
-- Delete Student
-- SQL Server Integration
-- Entity Framework Core
-- Swagger API Documentation
-- Repository Pattern
-- Service Layer
-- DTO Pattern
-- Dependency Injection
+A RESTful **ASP.NET Core Web API** for managing student records. This project demonstrates a clean layered architecture using **Repository Pattern**, **Service Layer**, **Entity Framework Core**, **JWT Authentication**, **Serilog Logging**, and **Global Exception Handling**.
 
 ---
 
-## Technologies Used
+## 📌 Features
 
-- ASP.NET Core Web API
+- ✅ Student CRUD Operations
+- ✅ SQL Server Database Integration
+- ✅ Entity Framework Core (Code First)
+- ✅ Repository Pattern
+- ✅ Service Layer
+- ✅ DTO (Data Transfer Objects)
+- ✅ Dependency Injection
+- ✅ JWT Authentication
+- ✅ Authorization using `[Authorize]`
+- ✅ Global Exception Handling Middleware
+- ✅ Serilog Request Logging
+- ✅ Swagger API Documentation
+
+---
+
+## 🛠️ Tech Stack
+
+- ASP.NET Core Web API (.NET 10)
 - C#
-- .NET 10
-- Entity Framework Core
 - SQL Server
-- SQL Server Management Studio (SSMS)
+- Entity Framework Core
 - Swagger / OpenAPI
+- JWT Authentication
+- Serilog
 - Visual Studio 2026
+- Git & GitHub
 
 ---
 
-## Project Structure
+## 📂 Project Structure
 
 ```
 StudentManagementSystem
 │
 ├── Controllers
-├── Models
-├── DTOs
+│   ├── AuthController.cs
+│   └── StudentController.cs
+│
 ├── Data
+│   └── ApplicationDbContext.cs
+│
+├── DTOs
+│   ├── LoginRequestDto.cs
+│   ├── LoginResponseDto.cs
+│   ├── StudentCreateDto.cs
+│   ├── StudentReadDto.cs
+│   └── StudentUpdateDto.cs
+│
 ├── Interfaces
-├── Repository
-├── Services
+│   ├── IStudentRepository.cs
+│   └── IStudentService.cs
+│
 ├── Middleware
-├── Helpers
+│   └── GlobalExceptionMiddleware.cs
+│
+├── Models
+│   └── Student.cs
+│
+├── Repository
+│   └── StudentRepository.cs
+│
+├── Services
+│   ├── JwtService.cs
+│   └── StudentService.cs
+│
+├── Migrations
+│
 ├── Program.cs
 ├── appsettings.json
 └── README.md
@@ -55,56 +80,52 @@ StudentManagementSystem
 
 ---
 
+# 🚀 Getting Started
+
 ## Prerequisites
 
 Before running the project, install:
 
 - Visual Studio 2026
+- .NET 10 SDK
 - SQL Server
 - SQL Server Management Studio (SSMS)
-- .NET SDK
 
 ---
 
-## Database Setup
-
-### 1. Clone the repository
+## Clone the Repository
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/StudentManagementSystem.git
+git clone https://github.com/komalpathare8755/Student-Management-System.git
 ```
 
-### 2. Open the project in Visual Studio
+Navigate to the project folder:
 
-Open the solution (.sln) file.
-
-### 3. Update Connection String
-
-Open:
-
-```
-appsettings.json
+```bash
+cd StudentManagementSystem
 ```
 
-Modify:
+---
+
+## Configure Database
+
+Update the connection string in **appsettings.json**
 
 ```json
 "ConnectionStrings": {
-  "DefaultConnection": "Server=localhost\\MSSQLSERVER01;Database=StudentDB;Trusted_Connection=True;TrustServerCertificate=True;"
+  "DefaultConnection": "Server=YOUR_SERVER_NAME;Database=StudentDB;Trusted_Connection=True;TrustServerCertificate=True;"
 }
 ```
 
-Replace the server name if your SQL Server instance is different.
+---
 
-### 4. Apply Database Migration
+## Apply Migrations
 
-Open Package Manager Console and run:
+Open **Package Manager Console**
 
 ```powershell
 Update-Database
 ```
-
-This will create the StudentDB database and Students table.
 
 ---
 
@@ -122,89 +143,180 @@ or
 Ctrl + F5
 ```
 
-The API will start and Swagger will open automatically.
+Swagger will open automatically.
 
 ---
 
-## Swagger URL
+# 📖 API Documentation
+
+Swagger URL
 
 ```
 https://localhost:7170/swagger
 ```
 
-(The port may differ on your machine.)
+---
+
+# 🔐 Authentication
+
+## Login
+
+### Endpoint
+
+```
+POST /api/Auth/login
+```
+
+### Request
+
+```json
+{
+  "username": "admin",
+  "password": "admin123"
+}
+```
+
+### Response
+
+```json
+{
+  "token": "YOUR_JWT_TOKEN"
+}
+```
+
+Use the generated JWT token in the Authorization header when accessing protected endpoints.
+
+Example:
+
+```
+Authorization: Bearer YOUR_TOKEN
+```
 
 ---
 
-## API Endpoints
+# 📚 Student APIs
 
 | Method | Endpoint | Description |
 |---------|----------|-------------|
-| GET | /api/Student | Get all students |
-| GET | /api/Student/{id} | Get student by ID |
-| POST | /api/Student | Create a student |
-| PUT | /api/Student/{id} | Update student |
-| DELETE | /api/Student/{id} | Delete student |
+| GET | `/api/Student` | Get all students |
+| GET | `/api/Student/{id}` | Get student by ID |
+| POST | `/api/Student` | Create student |
+| PUT | `/api/Student/{id}` | Update student |
+| DELETE | `/api/Student/{id}` | Delete student |
+
+> **Note:** All Student APIs require JWT Authentication.
 
 ---
 
-## Sample Request
+# 🏗️ Architecture
 
-### Create Student
-
-POST
+The project follows a layered architecture:
 
 ```
-/api/Student
-```
-
-Request Body
-
-```json
-{
-  "name": "Komal",
-  "email": "komal@gmail.com",
-  "age": 24,
-  "course": "Computer Engineering"
-}
-```
-
-Response
-
-```json
-{
-  "id": 1,
-  "name": "Komal",
-  "email": "komal@gmail.com",
-  "age": 24,
-  "course": "Computer Engineering"
-}
-```
-
----
-
-## Architecture
-
-```
-Controller
-      ↓
-Service
-      ↓
-Repository
-      ↓
+Client
+   │
+Controllers
+   │
+Service Layer
+   │
+Repository Layer
+   │
 Entity Framework Core
-      ↓
+   │
 SQL Server
 ```
 
 ---
 
-## Author
+# 🔄 Project Workflow
+
+1. Client sends a request.
+2. Controller receives the request.
+3. Service Layer validates business logic.
+4. Repository Layer interacts with the database.
+5. Entity Framework Core executes SQL queries.
+6. Response is returned to the client.
+
+---
+
+# 🔑 JWT Authentication Flow
+
+1. User logs in using `/api/Auth/login`.
+2. API validates the credentials.
+3. JWT token is generated.
+4. Client stores the token.
+5. Token is sent with every protected request.
+6. `[Authorize]` validates the token before allowing access.
+
+---
+
+# 📝 Logging
+
+The project uses **Serilog** for request logging.
+
+Example log:
+
+```
+HTTP GET /api/Student responded 200 in 40 ms
+```
+
+---
+
+# ⚠️ Global Exception Handling
+
+Unhandled exceptions are captured using custom middleware and returned as a structured JSON response.
+
+Example:
+
+```json
+{
+  "success": false,
+  "message": "An unexpected error occurred.",
+  "error": "Exception Message"
+}
+```
+
+---
+
+# 📦 Packages Used
+
+- Microsoft.EntityFrameworkCore
+- Microsoft.EntityFrameworkCore.SqlServer
+- Microsoft.EntityFrameworkCore.Tools
+- Microsoft.AspNetCore.Authentication.JwtBearer
+- Swashbuckle.AspNetCore
+- Serilog.AspNetCore
+- Serilog.Sinks.Console
+
+---
+
+# 🚀 Future Enhancements
+
+- User Registration
+- Database-based Authentication
+- Password Hashing
+- Role-Based Authorization
+- Refresh Tokens
+- Unit Testing
+- Docker Support
+- Azure Deployment
+- Pagination & Filtering
+
+---
+
+# 👨‍💻 Author
 
 **Komal Pathare**
 
-Bachelor of Engineering (Computer Engineering)
+- Bachelor of Engineering (Computer Engineering)
+- PG-DAC, CDAC IET Pune
 
-PG-DAC, CDAC IET Pune
+**GitHub**
 
-GitHub: https://github.com/YOUR_USERNAME
+https://github.com/komalpathare8755
+
+---
+
+# 📄 License
+
+This project is created for learning and portfolio purposes.
